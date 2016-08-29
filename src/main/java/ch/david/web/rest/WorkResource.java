@@ -10,6 +10,7 @@ import ch.david.repository.WorkRepository;
 import ch.david.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,11 +58,8 @@ public class WorkResource {
         log.debug("REST request to save Work : {}", work);
         if (work.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("work", "idexists", "A new work cannot already have an ID")).body(null);
-
         }
-
         setCurrentUser(work);
-
         Work result = workRepository.save(work);
         return ResponseEntity.created(new URI("/api/works/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("work", result.getId().toString()))
@@ -86,9 +84,7 @@ public class WorkResource {
         if (work.getId() == null) {
             return createWork(work);
         }
-
         setCurrentUser(work);
-
         Work result = workRepository.save(work);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert("work", work.getId().toString()))
@@ -142,6 +138,10 @@ public class WorkResource {
     @Timed
     public ResponseEntity<Void> deleteWork(@PathVariable Long id) {
         log.debug("REST request to delete Work : {}", id);
+        Work work = workRepository.findOneAndUserIsCurrentUser(id);
+        if (work == null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("work", "iddoesntexists", "Work entity cannot be deleted.")).body(null);
+        }
         workRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("work", id.toString())).build();
     }

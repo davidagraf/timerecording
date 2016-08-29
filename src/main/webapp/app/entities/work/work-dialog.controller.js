@@ -12,8 +12,11 @@
 
         vm.work = entity;
         vm.clear = clear;
+        vm.datePickerOpenStatus = {};
+        vm.openCalendar = openCalendar;
         vm.save = save;
         vm.projects = Project.query();
+        vm.users = User.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -42,6 +45,10 @@
             vm.isSaving = false;
         }
 
+        vm.datePickerOpenStatus.day = false;
 
+        function openCalendar (date) {
+            vm.datePickerOpenStatus[date] = true;
+        }
     }
 })();

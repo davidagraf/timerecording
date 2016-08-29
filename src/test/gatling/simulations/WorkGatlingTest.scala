@@ -67,7 +67,7 @@ class WorkGatlingTest extends Simulation {
             .exec(http("Create new work")
             .post("/api/works")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "hours":"0"}""")).asJSON
+            .body(StringBody("""{"id":null, "hours":"0", "day":"2020-01-01T00:00:00.000Z"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_work_url"))).exitHereIfFailed
             .pause(10)

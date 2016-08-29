@@ -21,9 +21,16 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "day",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
-    "changelogDate": "20160828185148",
+    "changelogDate": "20160829200815",
     "entityTableName": "work",
     "dto": "no",
     "pagination": "no",

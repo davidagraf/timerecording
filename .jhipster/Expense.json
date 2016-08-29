@@ -28,9 +28,16 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "day",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
-    "changelogDate": "20160828185149",
+    "changelogDate": "20160829200816",
     "entityTableName": "expense",
     "dto": "no",
     "pagination": "no",

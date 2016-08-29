@@ -21,6 +21,7 @@
                     <th><span>ID</span></th>
                     <th><span>Description</span></th>
                     <th><span>Amount</span></th>
+                    <th><span>Day</span></th>
                     <th><span>Project</span></th>
                     <th><span>User</span></th>
                     <th></th>
@@ -31,6 +32,7 @@
                     <td><a ui-sref="expense-detail({id:expense.id})">{{expense.id}}</a></td>
                     <td>{{expense.description}}</td>
                     <td>{{expense.amount}}</td>
+                        <td>{{expense.day | date:'mediumDate'}}</td>
                     <td>
                         <a ui-sref="project-detail({id:expense.project.id})">{{expense.project.id}}</a>
                     </td>

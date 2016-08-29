@@ -20,6 +20,7 @@
                 <tr>
                     <th><span>ID</span></th>
                     <th><span>Hours</span></th>
+                    <th><span>Day</span></th>
                     <th><span>Project</span></th>
                     <th><span>User</span></th>
                     <th></th>
@@ -29,6 +30,7 @@
                 <tr ng-repeat="work in vm.works track by work.id">
                     <td><a ui-sref="work-detail({id:work.id})">{{work.id}}</a></td>
                     <td>{{work.hours}}</td>
+                        <td>{{work.day | date:'mediumDate'}}</td>
                     <td>
                         <a ui-sref="project-detail({id:work.project.id})">{{work.project.id}}</a>
                     </td>

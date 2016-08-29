@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +43,9 @@ public class ExpenseResourceIntTest {
 
     private static final Integer DEFAULT_AMOUNT = 1;
     private static final Integer UPDATED_AMOUNT = 2;
+
+    private static final LocalDate DEFAULT_DAY = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_DAY = LocalDate.now(ZoneId.systemDefault());
 
     @Inject
     private ExpenseRepository expenseRepository;
@@ -78,7 +83,8 @@ public class ExpenseResourceIntTest {
         Expense expense = new Expense();
         expense = new Expense()
                 .description(DEFAULT_DESCRIPTION)
-                .amount(DEFAULT_AMOUNT);
+                .amount(DEFAULT_AMOUNT)
+                .day(DEFAULT_DAY);
         return expense;
     }
 
@@ -105,6 +111,7 @@ public class ExpenseResourceIntTest {
         Expense testExpense = expenses.get(expenses.size() - 1);
         assertThat(testExpense.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testExpense.getAmount()).isEqualTo(DEFAULT_AMOUNT);
+        assertThat(testExpense.getDay()).isEqualTo(DEFAULT_DAY);
     }
 
     @Test
@@ -145,6 +152,24 @@ public class ExpenseResourceIntTest {
 
     @Test
     @Transactional
+    public void checkDayIsRequired() throws Exception {
+        int databaseSizeBeforeTest = expenseRepository.findAll().size();
+        // set the field null
+        expense.setDay(null);
+
+        // Create the Expense, which fails.
+
+        restExpenseMockMvc.perform(post("/api/expenses")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(expense)))
+                .andExpect(status().isBadRequest());
+
+        List<Expense> expenses = expenseRepository.findAll();
+        assertThat(expenses).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllExpenses() throws Exception {
         // Initialize the database
         expenseRepository.saveAndFlush(expense);
@@ -155,7 +180,8 @@ public class ExpenseResourceIntTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(expense.getId().intValue())))
                 .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-                .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT)));
+                .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT)))
+                .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY.toString())));
     }
 
     @Test
@@ -170,7 +196,8 @@ public class ExpenseResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(expense.getId().intValue()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT));
+            .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT))
+            .andExpect(jsonPath("$.day").value(DEFAULT_DAY.toString()));
     }
 
     @Test
@@ -192,7 +219,8 @@ public class ExpenseResourceIntTest {
         Expense updatedExpense = expenseRepository.findOne(expense.getId());
         updatedExpense
                 .description(UPDATED_DESCRIPTION)
-                .amount(UPDATED_AMOUNT);
+                .amount(UPDATED_AMOUNT)
+                .day(UPDATED_DAY);
 
         restExpenseMockMvc.perform(put("/api/expenses")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -205,6 +233,7 @@ public class ExpenseResourceIntTest {
         Expense testExpense = expenses.get(expenses.size() - 1);
         assertThat(testExpense.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testExpense.getAmount()).isEqualTo(UPDATED_AMOUNT);
+        assertThat(testExpense.getDay()).isEqualTo(UPDATED_DAY);
     }
 
     @Test

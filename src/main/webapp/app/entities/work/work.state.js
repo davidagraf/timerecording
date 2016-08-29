@@ -96,6 +96,7 @@
                         entity: function () {
                             return {
                                 hours: null,
+                                day: null,
                                 id: null
                             };
                         }

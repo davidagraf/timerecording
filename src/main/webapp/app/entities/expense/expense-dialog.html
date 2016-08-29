@@ -41,18 +41,32 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" for="field_day">Day</label>
+                <div class="input-group">
+                    <input id="field_day" type="text" class="form-control" name="day" uib-datepicker-popup="{{dateformat}}" ng-model="vm.expense.day" is-open="vm.datePickerOpenStatus.day"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('day')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.day.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.day.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
 
         <div class="form-group">
             <label for="field_project">Project</label>
-            <select class="form-control" id="field_project" name="project" ng-model="vm.expense.project"
-                    ng-options="project as project.name for project in vm.projects track by project.id">
+            <select class="form-control" id="field_project" name="project" ng-model="vm.expense.project" ng-options="project as project.id for project in vm.projects track by project.id">
                 <option value=""></option>
             </select>
         </div>
         <div class="form-group">
             <label for="field_user">User</label>
-            <select class="form-control" id="field_user" name="user" ng-model="vm.expense.user"
-                    ng-options="user as (user.firstName + ' ' + user.lastName) for user in vm.users track by user.id">
+            <select class="form-control" id="field_user" name="user" ng-model="vm.expense.user" ng-options="user as user.id for user in vm.users track by user.id">
                 <option value=""></option>
             </select>
         </div>

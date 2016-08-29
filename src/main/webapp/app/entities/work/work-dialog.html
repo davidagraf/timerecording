@@ -29,6 +29,22 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" for="field_day">Day</label>
+                <div class="input-group">
+                    <input id="field_day" type="text" class="form-control" name="day" uib-datepicker-popup="{{dateformat}}" ng-model="vm.work.day" is-open="vm.datePickerOpenStatus.day"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('day')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.day.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.day.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
 
         <div class="form-group">
             <label for="field_project">Project</label>

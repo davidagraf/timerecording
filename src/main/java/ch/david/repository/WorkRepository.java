@@ -23,5 +23,4 @@ public interface WorkRepository extends JpaRepository<Work,Long> {
      */
     @Query("select work from Work work where work.user.id = :id and work.user.login = ?#{principal.username}")
     Work findOneAndUserIsCurrentUser(@Param("id") Long id);
-
 }

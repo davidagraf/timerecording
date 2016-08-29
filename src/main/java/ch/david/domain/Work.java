@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -25,6 +26,10 @@ public class Work implements Serializable {
     @NotNull
     @Column(name = "hours", nullable = false)
     private Integer hours;
+
+    @NotNull
+    @Column(name = "day", nullable = false)
+    private LocalDate day;
 
     @ManyToOne
     private Project project;
@@ -51,6 +56,19 @@ public class Work implements Serializable {
 
     public void setHours(Integer hours) {
         this.hours = hours;
+    }
+
+    public LocalDate getDay() {
+        return day;
+    }
+
+    public Work day(LocalDate day) {
+        this.day = day;
+        return this;
+    }
+
+    public void setDay(LocalDate day) {
+        this.day = day;
     }
 
     public Project getProject() {
@@ -104,6 +122,7 @@ public class Work implements Serializable {
         return "Work{" +
             "id=" + id +
             ", hours='" + hours + "'" +
+            ", day='" + day + "'" +
             '}';
     }
 }

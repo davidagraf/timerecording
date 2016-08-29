@@ -97,6 +97,7 @@
                             return {
                                 description: null,
                                 amount: null,
+                                day: null,
                                 id: null
                             };
                         }

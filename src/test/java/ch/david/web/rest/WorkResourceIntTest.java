@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +41,9 @@ public class WorkResourceIntTest {
 
     private static final Integer DEFAULT_HOURS = 1;
     private static final Integer UPDATED_HOURS = 2;
+
+    private static final LocalDate DEFAULT_DAY = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_DAY = LocalDate.now(ZoneId.systemDefault());
 
     @Inject
     private WorkRepository workRepository;
@@ -75,7 +80,8 @@ public class WorkResourceIntTest {
     public static Work createEntity(EntityManager em) {
         Work work = new Work();
         work = new Work()
-                .hours(DEFAULT_HOURS);
+                .hours(DEFAULT_HOURS)
+                .day(DEFAULT_DAY);
         return work;
     }
 
@@ -101,6 +107,7 @@ public class WorkResourceIntTest {
         assertThat(works).hasSize(databaseSizeBeforeCreate + 1);
         Work testWork = works.get(works.size() - 1);
         assertThat(testWork.getHours()).isEqualTo(DEFAULT_HOURS);
+        assertThat(testWork.getDay()).isEqualTo(DEFAULT_DAY);
     }
 
     @Test
@@ -109,6 +116,24 @@ public class WorkResourceIntTest {
         int databaseSizeBeforeTest = workRepository.findAll().size();
         // set the field null
         work.setHours(null);
+
+        // Create the Work, which fails.
+
+        restWorkMockMvc.perform(post("/api/works")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(work)))
+                .andExpect(status().isBadRequest());
+
+        List<Work> works = workRepository.findAll();
+        assertThat(works).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkDayIsRequired() throws Exception {
+        int databaseSizeBeforeTest = workRepository.findAll().size();
+        // set the field null
+        work.setDay(null);
 
         // Create the Work, which fails.
 
@@ -132,7 +157,8 @@ public class WorkResourceIntTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(work.getId().intValue())))
-                .andExpect(jsonPath("$.[*].hours").value(hasItem(DEFAULT_HOURS)));
+                .andExpect(jsonPath("$.[*].hours").value(hasItem(DEFAULT_HOURS)))
+                .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY.toString())));
     }
 
     @Test
@@ -146,7 +172,8 @@ public class WorkResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(work.getId().intValue()))
-            .andExpect(jsonPath("$.hours").value(DEFAULT_HOURS));
+            .andExpect(jsonPath("$.hours").value(DEFAULT_HOURS))
+            .andExpect(jsonPath("$.day").value(DEFAULT_DAY.toString()));
     }
 
     @Test
@@ -167,7 +194,8 @@ public class WorkResourceIntTest {
         // Update the work
         Work updatedWork = workRepository.findOne(work.getId());
         updatedWork
-                .hours(UPDATED_HOURS);
+                .hours(UPDATED_HOURS)
+                .day(UPDATED_DAY);
 
         restWorkMockMvc.perform(put("/api/works")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -179,6 +207,7 @@ public class WorkResourceIntTest {
         assertThat(works).hasSize(databaseSizeBeforeUpdate);
         Work testWork = works.get(works.size() - 1);
         assertThat(testWork.getHours()).isEqualTo(UPDATED_HOURS);
+        assertThat(testWork.getDay()).isEqualTo(UPDATED_DAY);
     }
 
     @Test
