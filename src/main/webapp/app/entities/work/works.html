@@ -1,5 +1,5 @@
 <div>
-    <h2>Works</h2>
+    <h2>Effort</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
@@ -7,7 +7,7 @@
                 <button class="btn btn-primary" ui-sref="work.new" >
                     <span class="glyphicon glyphicon-plus"></span>
                     <span >
-                        Create new Work
+                        Create new Effort
                     </span>
                 </button>
             </div>
@@ -18,7 +18,6 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr>
-                    <th><span>ID</span></th>
                     <th><span>Hours</span></th>
                     <th><span>Day</span></th>
                     <th><span>Project</span></th>
@@ -28,14 +27,13 @@
             </thead>
             <tbody>
                 <tr ng-repeat="work in vm.works track by work.id">
-                    <td><a ui-sref="work-detail({id:work.id})">{{work.id}}</a></td>
                     <td>{{work.hours}}</td>
                         <td>{{work.day | date:'mediumDate'}}</td>
                     <td>
-                        <a ui-sref="project-detail({id:work.project.id})">{{work.project.id}}</a>
+                        <a ui-sref="project-detail({id:work.project.id})">{{work.project.name}}</a>
                     </td>
                     <td>
-                        {{work.user.id}}
+                        {{work.user.firstName}} {{work.user.lastName}}
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
