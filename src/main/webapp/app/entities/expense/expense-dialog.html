@@ -44,13 +44,15 @@
 
         <div class="form-group">
             <label for="field_project">Project</label>
-            <select class="form-control" id="field_project" name="project" ng-model="vm.expense.project" ng-options="project as project.id for project in vm.projects track by project.id">
+            <select class="form-control" id="field_project" name="project" ng-model="vm.expense.project"
+                    ng-options="project as project.name for project in vm.projects track by project.id">
                 <option value=""></option>
             </select>
         </div>
         <div class="form-group">
             <label for="field_user">User</label>
-            <select class="form-control" id="field_user" name="user" ng-model="vm.expense.user" ng-options="user as user.id for user in vm.users track by user.id">
+            <select class="form-control" id="field_user" name="user" ng-model="vm.expense.user"
+                    ng-options="user as (user.firstName + ' ' + user.lastName) for user in vm.users track by user.id">
                 <option value=""></option>
             </select>
         </div>
