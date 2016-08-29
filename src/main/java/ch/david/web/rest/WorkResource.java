@@ -1,5 +1,8 @@
 package ch.david.web.rest;
 
+import ch.david.domain.User;
+import ch.david.repository.UserRepository;
+import ch.david.security.SecurityUtils;
 import com.codahale.metrics.annotation.Timed;
 import ch.david.domain.Work;
 
@@ -7,7 +10,6 @@ import ch.david.repository.WorkRepository;
 import ch.david.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +30,17 @@ import java.util.Optional;
 public class WorkResource {
 
     private final Logger log = LoggerFactory.getLogger(WorkResource.class);
-        
+
     @Inject
     private WorkRepository workRepository;
+
+    @Inject
+    private UserRepository userRepository;
+
+    private void setCurrentUser(Work work) {
+        Optional<User> user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+        work.setUser(user.get());
+    }
 
     /**
      * POST  /works : Create a new work.
@@ -47,7 +57,11 @@ public class WorkResource {
         log.debug("REST request to save Work : {}", work);
         if (work.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("work", "idexists", "A new work cannot already have an ID")).body(null);
+
         }
+
+        setCurrentUser(work);
+
         Work result = workRepository.save(work);
         return ResponseEntity.created(new URI("/api/works/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("work", result.getId().toString()))
@@ -72,6 +86,9 @@ public class WorkResource {
         if (work.getId() == null) {
             return createWork(work);
         }
+
+        setCurrentUser(work);
+
         Work result = workRepository.save(work);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert("work", work.getId().toString()))
@@ -89,7 +106,7 @@ public class WorkResource {
     @Timed
     public List<Work> getAllWorks() {
         log.debug("REST request to get all Works");
-        List<Work> works = workRepository.findAll();
+        List<Work> works = workRepository.findByUserIsCurrentUser();
         return works;
     }
 
@@ -105,7 +122,7 @@ public class WorkResource {
     @Timed
     public ResponseEntity<Work> getWork(@PathVariable Long id) {
         log.debug("REST request to get Work : {}", id);
-        Work work = workRepository.findOne(id);
+        Work work = workRepository.findOneAndUserIsCurrentUser(id);
         return Optional.ofNullable(work)
             .map(result -> new ResponseEntity<>(
                 result,
