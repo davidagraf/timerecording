@@ -1,0 +1,64 @@
+<div>
+    <h2 translate="timerecordingApp.effort.home.title">Efforts</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="effort.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  translate="timerecordingApp.effort.home.createLabel">
+                        Create new Effort
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="timerecordingApp.effort.hours">Hours</span></th>
+                    <th><span translate="timerecordingApp.effort.day">Day</span></th>
+                    <th><span translate="timerecordingApp.effort.project">Project</span></th>
+                    <th><span translate="timerecordingApp.effort.user">User</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="effort in vm.efforts track by effort.id">
+                    <td>{{effort.hours}}</td>
+                        <td>{{effort.day | date:'mediumDate'}}</td>
+                    <td>
+                        <a ui-sref="project-detail({id:effort.project.id})">{{effort.project.name}}</a>
+                    </td>
+                    <td>
+                        {{effort.user.firstName}} {{effort.user.lastName}}
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="effort-detail({id:effort.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="effort.edit({id:effort.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="effort.delete({id:effort.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -14,7 +14,7 @@
             url: '/project',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Projects'
+                pageTitle: 'timerecordingApp.project.home.title'
             },
             views: {
                 'content@': {
@@ -24,6 +24,11 @@
                 }
             },
             resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('project');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
             }
         })
         .state('project-detail', {
@@ -31,7 +36,7 @@
             url: '/project/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Project'
+                pageTitle: 'timerecordingApp.project.detail.title'
             },
             views: {
                 'content@': {
@@ -41,6 +46,10 @@
                 }
             },
             resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('project');
+                    return $translate.refresh();
+                }],
                 entity: ['$stateParams', 'Project', function($stateParams, Project) {
                     return Project.get({id : $stateParams.id}).$promise;
                 }],

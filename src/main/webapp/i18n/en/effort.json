@@ -1,0 +1,25 @@
+{
+    "timerecordingApp": {
+        "effort" : {
+            "home": {
+                "title": "Efforts",
+                "createLabel": "Create a new Effort",
+                "createOrEditLabel": "Create or edit a Effort",
+                "search": "Search for Effort"
+            },
+            "created": "A new Effort is created with identifier {{ param }}",
+            "updated": "A Effort is updated with identifier {{ param }}",
+            "deleted": "A Effort is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Effort {{ id }}?"
+            },
+            "detail": {
+                "title": "Effort"
+            },
+            "hours": "Hours",
+            "day": "Day",
+            "project": "Project",
+            "user": "User"
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "timerecordingApp": {
+        "expense" : {
+            "home": {
+                "title": "Expenses",
+                "createLabel": "Create a new Expense",
+                "createOrEditLabel": "Create or edit a Expense",
+                "search": "Search for Expense"
+            },
+            "created": "A new Expense is created with identifier {{ param }}",
+            "updated": "A Expense is updated with identifier {{ param }}",
+            "deleted": "A Expense is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Expense {{ id }}?"
+            },
+            "detail": {
+                "title": "Expense"
+            },
+            "description": "Description",
+            "amount": "Amount",
+            "day": "Day",
+            "project": "Project",
+            "user": "User"
+        }
+    }
+}

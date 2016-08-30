@@ -14,7 +14,7 @@
             url: '/expense',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Expenses'
+                pageTitle: 'timerecordingApp.expense.home.title'
             },
             views: {
                 'content@': {
@@ -24,6 +24,11 @@
                 }
             },
             resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('expense');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
             }
         })
         .state('expense-detail', {
@@ -31,7 +36,7 @@
             url: '/expense/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Expense'
+                pageTitle: 'timerecordingApp.expense.detail.title'
             },
             views: {
                 'content@': {
@@ -41,6 +46,10 @@
                 }
             },
             resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('expense');
+                    return $translate.refresh();
+                }],
                 entity: ['$stateParams', 'Expense', function($stateParams, Expense) {
                     return Expense.get({id : $stateParams.id}).$promise;
                 }],

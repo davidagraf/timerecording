@@ -1,0 +1,35 @@
+
+<div>
+    <h2><span translate="timerecordingApp.effort.detail.title">Effort</span> {{vm.effort.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span translate="timerecordingApp.effort.hours">Hours</span></dt>
+        <dd>
+            <span>{{vm.effort.hours}}</span>
+        </dd>
+        <dt><span translate="timerecordingApp.effort.day">Day</span></dt>
+        <dd>
+            <span>{{vm.effort.day | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span translate="timerecordingApp.effort.project">Project</span></dt>
+        <dd>
+            <a ui-sref="project-detail({id:vm.effort.project.id})">{{vm.effort.project.id}}</a>
+        </dd>
+        <dt><span translate="timerecordingApp.effort.user">User</span></dt>
+        <dd>
+            {{vm.effort.user.id}}
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="effort-detail.edit({id:vm.effort.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" translate="entity.action.edit"> Edit</span>
+    </button>
+</div>
