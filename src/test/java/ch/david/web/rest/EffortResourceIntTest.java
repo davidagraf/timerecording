@@ -2,12 +2,17 @@ package ch.david.web.rest;
 
 import ch.david.TimerecordingApp;
 import ch.david.domain.Effort;
+import ch.david.domain.User;
 import ch.david.repository.EffortRepository;
 
+import ch.david.repository.UserRepository;
+import ch.david.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
+
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -25,6 +30,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -57,15 +63,30 @@ public class EffortResourceIntTest {
     @Inject
     private EntityManager em;
 
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private UserRepository userRepository;
+
     private MockMvc restEffortMockMvc;
 
     private Effort effort;
+
+    private Optional<User> user;
 
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
         EffortResource effortResource = new EffortResource();
         ReflectionTestUtils.setField(effortResource, "effortRepository", effortRepository);
+        User u = new User();
+        u.setLogin("test");
+        u.setPassword("password");
+        u.setFirstName("firstname");
+        u.setLastName("lastname");
+        u.setEmail("email@email.com");
+        user = Optional.of(u);
         this.restEffortMockMvc = MockMvcBuilders.standaloneSetup(effortResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -88,6 +109,7 @@ public class EffortResourceIntTest {
     @Before
     public void initTest() {
         effort = createEntity(em);
+        Mockito.doReturn(user).when(userRepository).findOneByLogin("");
     }
 
     @Test
